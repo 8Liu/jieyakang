@@ -1,0 +1,29 @@
+debug: true
+logging:
+    level:
+        org.springframework.web: info
+        com.github.binarywang.demo.wx.miniapp: debug
+        cn.binarywang.wx.miniapp: debug
+wx:
+    miniapp:
+        configs:
+        - appid: wxfcc24a29b3ff5f57
+          secret: 7eba09d48f604930cfc35e8ff28cab22
+          token:
+          aesKey:
+          msgDataFormat: JSON
+spring:
+  #redis配置
+  redis:
+    database: 0
+    host: 127.0.0.1
+    password: 123456
+    port: 6379
+  ###数据库相关连接
+  datasource:
+    username: root
+    password:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/jieyakang?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false
+mybatis:
+  mapper-locations: com/liudehuang/jieyakang/**/mapper/*.xml
