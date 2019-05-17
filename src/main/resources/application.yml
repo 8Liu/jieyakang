@@ -4,6 +4,7 @@ logging:
         org.springframework.web: info
         com.github.binarywang.demo.wx.miniapp: debug
         cn.binarywang.wx.miniapp: debug
+        com.liudehuang.jieyakang.address.mapper: debug
 wx:
     miniapp:
         configs:
@@ -27,3 +28,6 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/jieyakang?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false
 mybatis:
   mapper-locations: com/liudehuang/jieyakang/**/mapper/*.xml
+
+
+

@@ -1,4 +1,4 @@
-package com.liudehuang.jieyakang.member.entity.dto;
+package com.liudehuang.jieyakang.member.entity.po;
 
 import lombok.Data;
 
@@ -7,7 +7,7 @@ import lombok.Data;
  * @date 2019/5/14 10:07
  */
 @Data
-public class UserInfoDTO {
+public class UserInfoPO {
     /**
      * 微信开放id
      */
@@ -48,5 +48,12 @@ public class UserInfoDTO {
      * 微信绑定的电话号码
      */
     private String phone;
-
+    /***
+     * 创建时间
+     */
+    private String createTime;
+    /**
+     * 更新时间
+     */
+    private String updateTime;
 }

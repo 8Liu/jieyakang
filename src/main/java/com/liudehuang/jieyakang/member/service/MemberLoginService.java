@@ -2,6 +2,7 @@ package com.liudehuang.jieyakang.member.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.liudehuang.jieyakang.base.BaseResponse;
+import com.liudehuang.jieyakang.member.entity.bo.GetUserListBO;
 import com.liudehuang.jieyakang.member.entity.bo.MemberLoginBO;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,4 +26,11 @@ public interface MemberLoginService {
      * @return
      */
     BaseResponse<JSONObject> getUserInfo(String token);
+
+    /**
+     *
+     * @param param
+     * @return
+     */
+    BaseResponse getUserList(GetUserListBO param);
 }

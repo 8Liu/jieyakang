@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.liudehuang.jieyakang.address.dao.AddressDao">
+    <sql id="address_table">t_address</sql>
+    <sql id="member_table">t_member</sql>
+    <resultMap id="addressMap" type="com.liudehuang.jieyakang.address.entity.po.AddressPO">
+        <result property="id" column="fid"/>
+        <result property="openId" column="openid"/>
+        <result property="isDefault" column="is_default"/>
+        <result property="address" column="address"/>
+        <result property="linkMan" column="linkman"/>
+        <result property="mobile" column="mobile"/>
+        <result property="remark" column="remark"/>
+        <result property="status" column="status"/>
+        <result property="nickName" column="nickname"/>
+        <result property="createTime" column="createtime"/>
+        <result property="updateTime" column="updatetime"/>
+    </resultMap>
+    <insert id="addAddress" parameterType="com.liudehuang.jieyakang.address.entity.dto.AddressDTO">
+        insert into<include refid="address_table"/>(
+        fid,
+        openid,
+        is_default,
+        address,
+        linkman,
+        mobile,
+        remark,
+        status
+        )values (
+        #{id},
+        #{openId},
+        #{isDefault},
+        #{address},
+        #{linkMan},
+        #{mobile},
+        #{remark},
+        0
+        )
+    </insert>
+    <sql id="query_address">
+        <trim prefixOverrides="and" prefix="where">
+            <if test="nickName!=null and nickName!=''">
+                member.nickname like CONCAT("%",#{nickName},"%")
+            </if>
+            <if test="mobile!=null and mobile!=''">
+                and address.mobile like CONCAT("%",#{mobile},"%")
+            </if>
+            <if test="linkMan!=null and linkMan!=''">
+                and address.linkman like CONCAT("%",#{linkMan},"%")
+            </if>
+            <if test="isDefault!=null">
+                and address.is_default = #{isDefault}
+            </if>
+            <if test="startTime!=null and startTime!=''">
+                and address.createtime <![CDATA[>=]]> #{startTime}
+            </if>
+            <if test="endTime!=null and endTime!=''">
+                and address.createtime <![CDATA[<=]]> #{endTime}
+            </if>
+        </trim>
+        order by address.createtime desc
+    </sql>
+    <select id="getAddress" parameterType="com.liudehuang.jieyakang.address.entity.bo.GetAddressParamBO"
+            resultMap="addressMap">
+        select
+        address.fid,
+        address.openid,
+        address.is_default,
+        address.address,
+        address.linkman,
+        address.mobile,
+        address.remark,
+        address.status,
+        member.nickname,
+        DATE_FORMAT(address.createtime,'%Y-%m-%d %H:%i:%s') as createtime,
+        DATE_FORMAT(address.updatetime,'%Y-%m-%d %H:%i:%s') as updatetime
+        from
+        <include refid="address_table"/>
+        as address
+        inner join
+        <include refid="member_table"/>
+        as member
+        on address.openid = member.openid
+        <include refid="query_address"/>
+        limit #{pageNo},#{pageSize}
+    </select>
+
+    <select id="countAddress" parameterType="com.liudehuang.jieyakang.address.entity.bo.GetAddressParamBO" resultType="int">
+        select
+        count(address.fid)
+        from
+        <include refid="address_table"/>
+        as address
+        inner join
+        <include refid="member_table"/>
+        as member
+        on address.openid = member.openid
+        <include refid="query_address"/>
+    </select>
+
+    <select id="getAddressByOpneId" parameterType="string" resultMap="addressMap">
+        select
+        address.fid,
+        address.openid,
+        address.is_default,
+        address.address,
+        address.linkman,
+        address.mobile,
+        address.remark,
+        address.status,
+        member.nickname,
+        DATE_FORMAT(address.createtime,'%Y-%m-%d %H:%i:%s') as createtime,
+        DATE_FORMAT(address.updatetime,'%Y-%m-%d %H:%i:%s') as updatetime
+        from
+        <include refid="address_table"/>
+        as address
+        inner join
+        <include refid="member_table"/>
+        as member
+        on address.openid = member.openid
+        where address.openid = #{openId}
+    </select>
+
+</mapper>

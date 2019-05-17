@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.liudehuang.jieyakang.member.dao.MemberDao">
+    <sql id="member_table">t_member</sql>
+
+    <resultMap id="memberMap" type="com.liudehuang.jieyakang.member.entity.po.UserInfoPO">
+        <result property="openId" column="openid"/>
+        <result property="nickName" column="nickname"/>
+        <result property="gender" column="gender"/>
+        <result property="language" column="language"/>
+        <result property="city" column="city"/>
+        <result property="province" column="province"/>
+        <result property="country" column="country"/>
+        <result property="avatarUrl" column="avatarUrl"/>
+        <result property="unionId" column="unionId"/>
+        <result property="phone" column="phone"/>
+        <result property="createTime" column="createtime"/>
+        <result property="updateTime" column="updatetime"/>
+    </resultMap>
+
+    <insert id="registerMember" parameterType="com.liudehuang.jieyakang.member.entity.dto.UserInfoDTO">
+        insert into<include refid="member_table"/>(
+        openid,
+        nickname,
+        gender,
+        language,
+        city,
+        province,
+        country,
+        avatarUrl,
+        unionId,
+        phone
+        )values (
+        #{openId},
+        #{nickName},
+        #{gender},
+        #{language},
+        #{city},
+        #{province},
+        #{country},
+        #{avatarUrl},
+        #{unionId},
+        #{phone}
+        )
+    </insert>
+
+    <sql id="userinfo_list">
+        openid,
+          nickname,
+          gender,
+          language,
+          city,
+          province,
+          country,
+          avatarUrl,
+          unionId,
+          phone,
+          DATE_FORMAT(createtime,'%Y-%m-%d %H:%i:%s') as createtime,
+          DATE_FORMAT(updatetime,'%Y-%m-%d %H:%i:%s') as updatetime
+    </sql>
+
+    <select id="getUserInfo" parameterType="string" resultMap="memberMap">
+        select
+          <include refid="userinfo_list"/>
+        from <include refid="member_table"/>
+        where openid = #{openId}
+    </select>
+
+    <sql id="query_userinfo">
+        <trim prefixOverrides="and" prefix="where">
+            <if test="nickName!=null and nickName!=''">
+                nickname like CONCAT("%",#{nickName},"%")
+            </if>
+            <if test="startTime!=null and startTime!=''">
+                and createtime <![CDATA[>=]]> #{startTime}
+            </if>
+            <if test="endTime!=null and endTime!=''">
+                and createtime <![CDATA[<=]]> #{endTime}
+            </if>
+        </trim>
+
+    </sql>
+
+    <select id="getUserList" parameterType="com.liudehuang.jieyakang.member.entity.bo.GetUserListBO" resultMap="memberMap">
+        select
+         <include refid="userinfo_list"/>
+        from <include refid="member_table"/>
+        <include refid="query_userinfo"/>
+        order by createtime desc
+        limit #{pageNo},#{pageSize}
+    </select>
+
+    <select id="countUserList" parameterType="com.liudehuang.jieyakang.member.entity.bo.GetUserListBO" resultType="int">
+        select
+        count(openid)
+        from <include refid="member_table"/>
+        <include refid="query_userinfo"/>
+    </select>
+</mapper>
